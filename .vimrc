@@ -4,10 +4,11 @@ if _curfile =~ "Makefile" || _curfile =~ "makefile" || _curfile =~ ".*\.mk"
 else
   set expandtab
   set cindent
-  set cino=:0g0
+  set cino=:0g0(0W4
 endif
 if _curfile =~ ".*\.cpp"
   set syntax=cpp.doxygen
+  set matchpairs+=<:>
 endif
 set nocompatible
 set linebreak
