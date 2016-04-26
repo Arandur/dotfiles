@@ -1,0 +1,6 @@
+[submodule "vim-racket"]
+	path = vim-racket
+	url = https://github.com/wlangstroth/vim-racket
+[submodule "pollen.vim"]
+	path = pollen.vim
+	url = https://github.com/fasiha/pollen.vim
