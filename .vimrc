@@ -1,8 +1,8 @@
+execute pathogen#infect()
+
 set nocompatible
 set linebreak
 set showcmd
-
-set foldmethod=syntax
 
 filetype on
 filetype plugin on
@@ -14,12 +14,12 @@ set grepprg=grep\ -nH\ $*
 set autoindent
 set smarttab
 
-set synmaxcol=10000
-
 if version >= 700
   set spl=en spell
   set nospell
 endif
+
+set synmaxcol=10000
 
 compiler gcc
 
@@ -42,53 +42,69 @@ highlight MatchParen ctermbg=4
 
 nnoremap <space> za
 
-nore ; :
-nore , ;
 nore \ :noh<CR>
 
 set background=dark
-
-set expandtab
-
-let _curfile = expand("%:t")
+set foldmethod=syntax
 
 set softtabstop=2
 set tabstop=2
 set shiftwidth=2
 
-if _curfile =~ "Makefile" || _curfile =~ "makefile" || _curfile =~ ".*\.mk"
+set expandtab
+
+" Filetype-specific settings
+let _curfile = expand("%:t")
+
+" Makefiles
+if _curfile =~? 'Makefile\|\.mk$'
   set noexpandtab
 endif
 
-if _curfile =~ ".*\.cpp"
+" C++
+if _curfile =~? '\.\(cpp\|t\?cc\|h\|hpp\)$'
   set syntax=cpp.doxygen
   set matchpairs+=<:>
   set cindent
   set cino=:0g0(0W4
 endif
 
-if _curfile =~ ".*\.htm[l]"
-  set filetype=html
-  set matchpairs+=<:>
-endif
-
-if _curfile =~ ".*\.java"
+" C
+if _curfile =~? '\.c$'
   set cindent
   set cino=:0g0(0W4
 endif
 
-if _curfile =~ ".*\.md"
-  set conceallevel=2
-endif
-
-if _curfile =~ ".*\.rkt"
-  set syntax=racket
-  set cinkeys-=0#
-  set indentkeys-=0#
+" Racket
+if _curfile =~? '\.rkt$'
   set softtabstop=1
   set tabstop=1
   set shiftwidth=1
-  set lisp
+  set cindent
+  set cinkeys-=0#
+  set indentkeys-=0#
+  set cino=g0(0
+  set foldmethod=indent
 endif
 
-execute pathogen#infect()
+" Java
+if _curfile =~? '\.java$'
+  set cindent
+  set cino=:0g0(0W4
+  set softtabstop=4
+  set tabstop=4
+  set shiftwidth=4
+endif
+
+" Pollen
+au BufRead,BufNewFile *.*.p set filetype=pollen
+
+" Utility functions
+function! StripWhitespace()
+  let save_cursor = getpos(".")
+  let old_query = getreg('/')
+  :%s/\s\+$//g
+  call setpos('.', save_cursor)
+  call setreg('/', old_query)
+endfunction
+noremap <leader>ss :call StripWhitespace()<CR>
